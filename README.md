@@ -19,7 +19,7 @@ Downloads your Snapchat Memories based on a JSON file exported from Snapchat.
 
 **Usage:**
 ```
-python generate.py
+python3 generate.py
 ```
 
 **Flags:**
@@ -71,7 +71,7 @@ To use these scripts, you need to export your Snapchat Memories:
 1. Open Snapchat and go to **Settings → My Data**.
 2. Request your Memories and select **JSON formatting**.
 3. Snapchat will email you a link to download a ZIP file containing your memories.
-4. Unbundle the ZIP file you downloaded from Snapchat.
+4. Unzip the ZIP file you downloaded from Snapchat.
 5. Move `memories_history.json` into the same folder as `generate.py`.
 
 ---
@@ -79,7 +79,7 @@ To use these scripts, you need to export your Snapchat Memories:
 ## Recommended Workflow
 
 1. Download your Snapchat data and place `memories_history.json` next to `generate.py`.
-2. Run `generate.py` to download all media.
+2. Run `generate.py` to download all media using `python3 generate.py`.
 3. Run `gen_thumbnails.py` to generate video thumbnails.
 4. Run `gen_html.py` to create the HTML gallery (`memories_gallery.html`).
 5. Open `memories_gallery.html` in a web browser to view your Memories.
