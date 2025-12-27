@@ -29,27 +29,41 @@ def load_memories(json_path: Path):
     with json_path.open("r", encoding="utf-8") as f:
         raw = json.load(f)
 
+    items = raw.get("Saved Media")
+    if not isinstance(items, list):
+        log("ERROR: 'Saved Media' not found or invalid")
+        return []
+
     memories = []
 
-    for item in raw:
+    for idx, item in enumerate(items, 1):
         try:
-            date_str = item.get("Date") or item.get("Create Time") or item.get("Creation Time")
-            filename = item.get("Filename") or item.get("File Name")
-            url = item.get("Download Link") or item.get("Download URL")
-            media_type = item.get("Media Type", "")
+            date_str = item.get("Date")
+            media_type = item.get("Media Type", "").lower()
 
-            if not (date_str and filename and url):
+            url = (
+                item.get("Media Download Url")
+                or item.get("Download Link")
+            )
+
+            if not (date_str and url):
                 continue
 
-            dt = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+            # Snapchat date format: "2025-12-25 16:05:11 UTC"
+            dt = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S UTC")
+
+            # Generate filename
+            ext = "mp4" if "video" in media_type else "jpg"
+            filename = dt.strftime(f"%Y%m%d_%H%M%S_{idx}.{ext}")
 
             memories.append({
                 "filename": filename,
                 "url": url,
                 "datetime": dt,
-                "media_type": media_type.lower()
+                "media_type": media_type
             })
-        except Exception:
+
+        except Exception as e:
             continue
 
     return memories
