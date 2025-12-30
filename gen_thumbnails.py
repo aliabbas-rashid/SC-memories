@@ -8,6 +8,14 @@ VIDEO_EXTENSIONS = [".mp4", ".mov", ".avi", ".mkv"]
 
 THUMB_DIR.mkdir(exist_ok=True)
 
+# -------------------- LOGGING --------------------
+
+def log(msg):
+    try:
+        print(msg, flush=True)
+    except UnicodeEncodeError:
+        print(msg.encode("ascii", "ignore").decode(), flush=True)
+
 def generate_thumbnail(video_path: Path, thumb_path: Path):
     """
     Generates a thumbnail (JPEG) for a video using ffmpeg.
@@ -23,9 +31,9 @@ def generate_thumbnail(video_path: Path, thumb_path: Path):
             str(thumb_path)
         ]
         subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        print(f"Generated thumbnail: {thumb_path.name}")
+        log(f"Generated thumbnail: {thumb_path.name}")
     except Exception as e:
-        print(f"Failed to generate thumbnail for {video_path.name}: {e}")
+        log(f"Failed to generate thumbnail for {video_path.name}: {e}")
 
 def main():
     for video_file in MEDIA_DIR.iterdir():
@@ -34,7 +42,7 @@ def main():
             if not thumb_file.exists():
                 generate_thumbnail(video_file, thumb_file)
             else:
-                print(f"Thumbnail already exists: {thumb_file.name}")
+                log(f"Thumbnail already exists: {thumb_file.name}")
 
 if __name__ == "__main__":
     main()
